@@ -1,0 +1,53 @@
+30)	Write a C program to implement the following unix/linux command (use fork, pipe and exec system call). Your program should block the signal Ctrl-C and Ctrl-\ signal during the execution. i.e. Ls –l | wc –l 
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<fcntl.h>
+#include<sys/stat.h>
+#include<sys/types.h>
+#include<dirent.h>
+#include<string.h>
+#include<signal.h>
+void sh1();
+void sh2();
+int main()
+{
+	int n,fd[2];
+	pipe(fd);
+	
+	signal(SIGINT,sh1);
+	signal(SIGQUIT,sh2);
+	n=fork(); // child parent tayar karnya sathi..
+	if(n==0)
+	{
+		close(fd[0]);
+		close(1);
+		dup(fd[1]);
+		close(fd[1]);
+		execlp("ls","ls","-l",NULL);
+	}	
+	else
+	{
+		sleep(30);
+		close(fd[1]);
+		close(0);
+		dup(fd[0]);
+		close(fd[0]);
+		execlp("wc","wc","-l",NULL);
+		
+	}	
+return 0;	
+}
+
+void sh1()
+{
+	printf("\n cought clt+c");
+	fflush(stdout);
+}
+
+void sh2()
+{
+	printf("\n cought Quite");
+	fflush(stdout);
+}
