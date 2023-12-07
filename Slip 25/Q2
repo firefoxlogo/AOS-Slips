@@ -1,0 +1,29 @@
+13)	Write a C program that redirects standard output to a file output.txt. (use of dup and open system call). 
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<fcntl.h>
+#include<sys/stat.h>
+#include<sys/types.h>
+#include<dirent.h>
+#include<string.h>
+int main()
+{
+	int fd1,fd2;
+	fd1=open("output.txt",O_WRONLY|O_CREAT,0666);
+	printf("\nNormal output:");
+	fflush(stdout);
+	
+	fd2=dup(1);
+	dup2(fd1,1);
+	printf("\n Atharav Nijampurkar");
+	printf("\n h.v.deasi clg");
+	
+	close(fd1);
+	fflush(stdout);
+	dup2(fd2,1);
+	printf("\nAgain Normal");
+	return 0;
+	
+}
