@@ -1,0 +1,45 @@
+
+21)	Write a C program to create an unnamed pipe. The child process will write following three messages to pipe and parent process display it. 
+Message1 = “Hello World” 
+Message2 = “Hello SPPU” 
+Message3 = “Linux is Funny” 
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<fcntl.h>
+#include<sys/stat.h>
+#include<sys/types.h>
+#include<dirent.h>
+#include<string.h>
+
+int main()
+{
+ int p[2];
+ int n,i;
+ char *m1="Hello World\n";
+ char *m2="Hello SPPU\n";
+ char *m3="Linux is Funny\n";
+ char s[50];
+ pipe(p);
+ n=fork();
+ if(n==0)
+ {
+ 	write(p[1],m1,strlen(m1));
+ 	write(p[1],m2,strlen(m1));
+ 	write(p[1],m3,strlen(m1));
+ }
+ else
+ {
+ 	printf("\n In Parent!!!!");
+ 	for(i=0;i<3;i++)
+ 	{
+ 		read(p[0],s,50);
+ 		printf("%s",s);
+ 	}
+ 
+ }
+
+return 0;
+
+}
