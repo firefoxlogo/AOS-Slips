@@ -1,39 +1,77 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<unistd.h>
-#include<fcntl.h>
-#include<sys/stat.h>
-#include<sys/types.h>
-#include<dirent.h>
-#include<string.h>
 
-int main()
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+int main() 
 {
- int p[2];
- int n,i;
- char *m1="SK\n";
- char *m2="photographer\n";
- char *m3="pune\n";
- char s[50];
- pipe(p);
- n=fork();
- if(n==0)
+ int pipefd[2];
+ pid_t child_pid;
+ if (pipe(pipefd) == -1) 
  {
- 	write(p[1],m1,strlen(m1));
- 	write(p[1],m2,strlen(m1));
- 	write(p[1],m3,strlen(m1));
+ perror("Pipe creation failed");
+ exit(EXIT_FAILURE);
  }
- else
+ child_pid = fork();
+ if (child_pid == -1) 
  {
- 	printf("\n In Parent!!!!");
- 	for(i=0;i<3;i++)
- 	{
- 		read(p[0],s,100);
- 		printf("%s",s);
- 	}
+ perror("fork failed ");
+ exit(EXIT_FAILURE);
+ }
+ if (child_pid == 0) 
+ {
  
+ close(pipefd[0]); 
+ char *messages[] =
+ {
+ "Message1= Hello World",
+ "Message2= Hello SPPU",
+ "Message2= Linux is Funny",
+ };
+ for (int i = 0; i < 3; i++) 
+ {
+write(pipefd[1], messages[i], strlen(messages[i]));
+
+ write(pipefd[1], "\n", 1); 
+
  }
 
-return 0;
+ close(pipefd[1]);
+
+ exit(EXIT_SUCCESS);
+
+ } 
+
+else 
+
+{
+
+ 
+
+ close(pipefd[1]); 
+
+ char buffer[100];
+
+ ssize_t bytes_read;
+
+ while ((bytes_read = read(pipefd[0],
+
+ buffer, sizeof(buffer))) > 0)
+
+ {
+
+ buffer[bytes_read] = '\0';
+
+ printf("Parent received: %s", buffer);
+
+ }
+
+ close(pipefd[0]);
+
+ }
+
+ //wait(NULL); 
+
+ return 0;
 
 }
