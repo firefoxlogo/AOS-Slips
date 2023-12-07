@@ -1,0 +1,36 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<fcntl.h>
+#include<sys/stat.h>
+#include<sys/types.h>
+
+int main( int argc,char *argv[])
+ {
+ 	struct stat s;
+	int i;
+	if(argc<=0)
+	{
+		printf("Give File nAME");
+		exit(0);
+	}
+	stat(argv[i],&s);
+	if(S_ISREG(s.st_mode))
+		printf("Regular File");
+	else if(S_ISDIR(s.st_mode))
+		printf("Directory File");
+	else if(S_ISFIFO(s.st_mode))
+		printf("Pipe File");
+	else if(S_ISSOCK(s.st_mode))
+		printf("Scoket File");
+	else if(S_ISBL///K(s.st_mode))
+		printf("Block File");
+	else if(S_ISCHR(s.st_mode))
+		printf("Charactre File");
+	else if(S_ISLNK(s.st_mode))
+		printf(" Link File");
+		
+	return 0;
+}
+
+	
