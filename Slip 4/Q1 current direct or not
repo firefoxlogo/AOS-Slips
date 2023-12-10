@@ -1,20 +1,19 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+int main(int argc, char *argv[]) {
+if (argc <2) {
 
-#include<stdio.h>
-#include<stdlib.h>
-#include<unistd.h>
-#include<fcntl.h>
- int main()
- {
- 	char s[100];
- 	int fd;
- 	printf("\n Enter file name");
- 	scanf("%s",&s);
- 	fd=open(s,O_RDONLY);
- 	if(fd<0)
- 		printf("File not present");
- 	else
- 		printf("File is present");
- 		
- 	close(fd);
- 	return 0;
- }
+printf("Usage: %s<file> <file2> ... <file>\n", argv[0]);
+return 1;
+}
+for (int i = 1; i < argc; i++) {
+if (access(argv[i], F_OK) != -1) {
+printf("%s exists in the current directory.\n", argv[i]);
+} else {
+
+printf("%s does not exist in the current directory.\n", argv[i]);
+}
+}
+return 0;
+}
